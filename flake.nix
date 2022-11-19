@@ -66,8 +66,7 @@
         # Import local packages passing system relevnet pkgs through
         # for dependencies.
         localPackages = import ./packages { inherit pkgs; };
-        localUnstablePackages =
-          import ./packages/unstable.nix { pkgs = pkgsUnstable; };
+        localUnstablePackages = import ./packages { pkgs = pkgsUnstable; };
         packages = (flake-utils.lib.flattenTree localPackages) // {
           default = self.outputs.packages.${system}.vulnix-precommit;
         };
