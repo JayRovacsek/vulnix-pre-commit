@@ -1,0 +1,6 @@
+# Shell load content
+.direnv
+# Auto-generated pre-commit hook 
+.pre-commit-config.yaml
+# Build output
+result
