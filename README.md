@@ -24,10 +24,69 @@ build outputs of your project are weak to a select severity of vulnerability. No
 intent to augment this capability to be a little smarter about determining if changes have meaningfully eroded the security
 of a build are not yet fully realised (see the future section below).
 
-*TODO: CREATE EXAMPLE MVP CODE OF USING IN A FLAKE
+MVP Flake structure:
 ```nix
-{ 
-    #TODO 
+{
+  description = "";
+
+  inputs = {
+    stable.url = "github:nixos/nixpkgs/nixos-unstable";
+    unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    vulnix-pre-commit.url = "github:jayrovacsek/vulnix-pre-commit";
+
+    flake-utils.url = "github:numtide/flake-utils";
+
+    pre-commit-hooks = {
+      url =
+        "github:cachix/pre-commit-hooks.nix/a8f7e8c2f2c8a428e2844c99ee5aa4718db61698";
+      inputs = {
+        nixpkgs.follows = "stable";
+        flake-utils.follows = "flake-utils";
+      };
+    };
+  };
+
+  outputs = { self, flake-utils, ... }:
+
+    flake-utils.lib.eachSystem [
+      "aarch64-linux"
+      "aarch64-darwin"
+      "x86_64-darwin"
+      "x86_64-linux"
+    ] (system:
+      let
+        checks = {
+          pre-commit-check = self.inputs.pre-commit-hooks.lib.${system}.run
+            (import ./pre-commit-checks.nix { inherit self pkgs system; });
+        };
+
+        devShell = pkgs.mkShell {
+          name = "soe-dev-shell";
+          packages = devShellStableDeps ++ devShellUnstableDeps;
+          inherit (self.checks.${system}.pre-commit-check) shellHook;
+        };
+        devShells.default = self.outputs.devShell.${system};
+      in { inherit devShell devShells checks; });
+}
+```
+
+MVP pre-commit-checks structure:
+```nix
+{ self, pkgs, system }: {
+  src = self;
+  hooks = {
+    vulnix = {
+      enable = true;
+      name = "Vulnix Spicy CVE Check";
+      entry = "${
+          self.inputs.vulnix-pre-commit.packages.${system}.vulnix-precommit
+        }/bin/vulnix-precommit 7.5";
+
+      files = "";
+      language = "system";
+    };
+  };
 }
 ```
 
