@@ -1,9 +1,11 @@
 {
   description = "Vulnix pre-commit hook";
 
-  inputs = {
-    stable.url = "github:nixos/nixpkgs/release-22.05";
-    unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+  inputs = rec {
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
+    stable.url = "github:nixos/nixpkgs/release-22.11";
+    unstable = nixpkgs;
 
     # Adds flake compatability to start removing the vestiges of 
     # shell.nix and move us towards the more modern nix develop
@@ -14,6 +16,11 @@
       flake = false;
     };
 
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.nixpkgs.follows = "stable";
+    };
+
     # Adds configurable pre-commit options to our flake :)
     pre-commit-hooks = {
       url =
@@ -21,10 +28,10 @@
       inputs = {
         nixpkgs.follows = "stable";
         flake-utils.follows = "flake-utils";
+        flake-compat.follows = "flake-compat";
+        gitignore.follows = "stable";
       };
     };
-
-    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = { self, flake-utils, ... }:
@@ -43,8 +50,8 @@
         pkgs = self.inputs.stable.legacyPackages.${system};
         pkgsUnstable = self.inputs.unstable.legacyPackages.${system};
 
-        devShellStableDeps = with pkgs; [ nixfmt statix vulnix ];
-        devShellUnstableDeps = with pkgsUnstable; [ nil ];
+        devShellStableDeps = with pkgs; [ nixfmt statix vulnix nil ];
+        devShellUnstableDeps = with pkgsUnstable; [ ];
 
         checks = {
           pre-commit-check = self.inputs.pre-commit-hooks.lib.${system}.run
