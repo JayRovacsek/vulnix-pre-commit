@@ -1,6 +1,11 @@
 # vulnix-pre-commit
 A simple wrapper for vulnix to check the state of a flake derivation for new or introduced vulnerabilities
 
+# !!!WARNING!!!
+This flake does not currently achieve exactly what it suggests on the box - the hook utilised to identify is any vulnerability of
+X severity or above uses the `--system` flag for the moment until I can rewrite the location checks a bit more intelligently.
+Pull requests welcome! :heart:
+
 ## Developing This Flake
 To contribute to this flake, please create a meaningful pull request against the repository. If you are utilising
 a visual studio code derivative you should be able to include the dev shell within your environment with the use of 
