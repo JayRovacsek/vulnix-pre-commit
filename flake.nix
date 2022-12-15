@@ -1,11 +1,8 @@
 {
   description = "Vulnix pre-commit hook";
 
-  inputs = rec {
+  inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-
-    stable.url = "github:nixos/nixpkgs/release-22.11";
-    unstable = nixpkgs;
 
     # Adds flake compatability to start removing the vestiges of 
     # shell.nix and move us towards the more modern nix develop
@@ -23,10 +20,10 @@
       url =
         "github:cachix/pre-commit-hooks.nix/a8f7e8c2f2c8a428e2844c99ee5aa4718db61698";
       inputs = {
-        nixpkgs.follows = "stable";
+        nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
         flake-compat.follows = "flake-compat";
-        gitignore.follows = "stable";
+        gitignore.follows = "nixpkgs";
       };
     };
   };
@@ -44,20 +41,17 @@
         # devShell are pinned to stable - this is intended to ensure
         # backwards compatability & reduced pain when managing deps
         # in these spaces
-        pkgs = self.inputs.stable.legacyPackages.${system};
-        pkgsUnstable = self.inputs.unstable.legacyPackages.${system};
-
-        devShellStableDeps = with pkgs; [ nixfmt statix vulnix nil ];
-        devShellUnstableDeps = with pkgsUnstable; [ ];
+        pkgs = self.inputs.nixpkgs.legacyPackages.${system};
 
         checks = {
           pre-commit-check = self.inputs.pre-commit-hooks.lib.${system}.run
             (import ./pre-commit-checks.nix { inherit self pkgs system; });
         };
 
-        devShell = pkgs.mkShell {
+        devShell = let packages = with pkgs; [ nixfmt statix vulnix nil ];
+        in pkgs.mkShell {
           name = "nix-config-dev-shell";
-          packages = devShellStableDeps ++ devShellUnstableDeps;
+          inherit packages;
           # Self reference to make the default shell hook that which generates
           # a suitable pre-commit hook installation
           inherit (self.checks.${system}.pre-commit-check) shellHook;
@@ -70,10 +64,8 @@
         # Import local packages passing system relevnet pkgs through
         # for dependencies.
         localPackages = import ./packages { inherit pkgs; };
-        localUnstablePackages = import ./packages { pkgs = pkgsUnstable; };
         packages = (flake-utils.lib.flattenTree localPackages) // {
           default = self.outputs.packages.${system}.vulnix-precommit;
         };
-        unstablePackages = flake-utils.lib.flattenTree localUnstablePackages;
-      in { inherit devShell devShells packages unstablePackages checks; });
+      in { inherit devShell devShells packages checks; });
 }

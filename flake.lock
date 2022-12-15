@@ -72,10 +72,10 @@
           "flake-utils"
         ],
         "gitignore": [
-          "stable"
+          "nixpkgs"
         ],
         "nixpkgs": [
-          "stable"
+          "nixpkgs"
         ],
         "nixpkgs-stable": "nixpkgs-stable"
       },
@@ -99,41 +99,7 @@
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
-        "pre-commit-hooks": "pre-commit-hooks",
-        "stable": "stable",
-        "unstable": "unstable"
-      }
-    },
-    "stable": {
-      "locked": {
-        "lastModified": 1671069646,
-        "narHash": "sha256-9jqxmWKtileFygeyi74M8mx2CM91wsB+6jpad2cH//E=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "320fd0de7a108096777f5a313077aa81136f6c94",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "release-22.11",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "unstable": {
-      "locked": {
-        "lastModified": 1671007632,
-        "narHash": "sha256-1uxNTBOa0SMypJKOWeUqrz2VfmwQ1hVgWckPdgDNip4=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "b9a0cd40ede905f554399f3f165895dccfd35f3b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
+        "pre-commit-hooks": "pre-commit-hooks"
       }
     }
   },
