@@ -1,19 +1,7 @@
 { self, pkgs, system }: {
   src = self;
   hooks = {
-    nixfmt = {
-      enable = true;
-      excludes = [ ];
-    };
-    vulnix = {
-      enable = true;
-      name = "Vulnix CVE Check";
-      entry = "${
-          self.outputs.packages.${system}.vulnix-precommit
-        }/bin/vulnix-precommit 7.5";
-
-      files = "";
-      language = "system";
-    };
+    nixfmt.enable = true;
+    statix.enable = true;
   };
 }

@@ -16,10 +16,7 @@
       flake = false;
     };
 
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.nixpkgs.follows = "stable";
-    };
+    flake-utils.url = "github:numtide/flake-utils";
 
     # Adds configurable pre-commit options to our flake :)
     pre-commit-hooks = {
