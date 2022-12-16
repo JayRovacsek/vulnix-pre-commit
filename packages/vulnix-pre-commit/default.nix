@@ -1,8 +1,8 @@
 { stdenv, pkgs, lib }:
 with lib;
 let
-  name = "vulnix-precommit";
-  pname = "vulnix-precommit";
+  name = "vulnix-pre-commit";
+  pname = "vulnix-pre-commit";
   version = "0.0.1";
   meta = {
     description =
@@ -10,7 +10,7 @@ let
     platforms = platforms.unix;
   };
 
-  vulnix-precommit-wrapped = pkgs.writeShellScriptBin "vulnix-precommit" ''
+  vulnix-pre-commit-wrapped = pkgs.writeShellScriptBin "vulnix-pre-commit" ''
     SEVERITY_TOLERANCE=$1
 
     if ! [[ $SEVERITY_TOLERANCE =~ ^[0-9]+(\.[0-9]+)?$ ]]; 
@@ -47,10 +47,10 @@ let
 in stdenv.mkDerivation {
   inherit name pname version meta phases;
 
-  buildInputs = [ vulnix-precommit-wrapped ];
+  buildInputs = [ vulnix-pre-commit-wrapped ];
 
   installPhase = ''
     mkdir -p $out/bin
-    ln -s ${vulnix-precommit-wrapped}/bin/vulnix-precommit $out/bin
+    ln -s ${vulnix-pre-commit-wrapped}/bin/vulnix-pre-commit $out/bin
   '';
 }

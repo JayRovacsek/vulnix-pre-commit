@@ -65,7 +65,7 @@
         # for dependencies.
         localPackages = import ./packages { inherit pkgs; };
         packages = (flake-utils.lib.flattenTree localPackages) // {
-          default = self.outputs.packages.${system}.vulnix-precommit;
+          default = self.outputs.packages.${system}.vulnix-pre-commit;
         };
       in { inherit devShell devShells packages checks; });
 }

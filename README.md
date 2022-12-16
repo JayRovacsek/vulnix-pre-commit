@@ -85,10 +85,9 @@ MVP pre-commit-checks structure:
       enable = true;
       name = "Vulnix Spicy CVE Check";
       entry = "${
-          self.inputs.vulnix-pre-commit.packages.${system}.vulnix-precommit
-        }/bin/vulnix-precommit 7.5";
+          self.inputs.vulnix-pre-commit.packages.${system}.vulnix-pre-commit
+        }/bin/vulnix-pre-commit 7.5";
 
-      files = "";
       language = "system";
     };
   };

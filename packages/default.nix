@@ -1,1 +1,4 @@
-{ pkgs }: with pkgs; { vulnix-precommit = callPackage ./vulnix-precommit { }; }
+{ pkgs }:
+with pkgs; {
+  vulnix-pre-commit = callPackage ./vulnix-pre-commit { };
+}
